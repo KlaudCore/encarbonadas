@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encarbonadas · Cliente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --charcoal: #1a1a1a; --charcoal-light: #2d2d2d; --charcoal-lighter: #3d3d3d;
+            --amber: #e67e22; --amber-dark: #d35400; --amber-glow: rgba(230, 126, 34, 0.25);
+            --cream: #fdf5e6; --white: #ffffff; --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --radius: 16px; --radius-sm: 8px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--charcoal);
+            color: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .app { max-width: 1200px; width: 100%; flex: 1; }
+        .header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px; background: var(--charcoal-light);
+            border-radius: var(--radius); box-shadow: var(--shadow);
+            margin-bottom: 28px; border: 1px solid rgba(255,255,255,0.04);
+            flex-wrap: wrap; gap: 12px;
+        }
+        .header-brand { display: flex; align-items: center; gap: 12px; }
+        .header-brand .logo-icon { font-size: 28px; color: var(--amber); }
+        .header-brand h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--cream); }
+        .header-brand h1 span { color: var(--amber); }
+        .admin-badge { background: var(--charcoal-lighter); padding: 6px 16px; border-radius: 50px; font-size: 13px; color: #aaa; }
+        .admin-badge a { color: var(--amber); text-decoration: none; font-weight: 600; }
+        .admin-badge a:hover { text-decoration: underline; }
+
+        .client-landing {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 40px 20px 60px; min-height: 60vh;
+        }
+        .client-landing .hero-icon { font-size: 80px; color: var(--amber); margin-bottom: 16px; filter: drop-shadow(0 8px 32px var(--amber-glow)); }
+        .client-landing h2 { font-family: 'Playfair Display', serif; font-size: 48px; color: var(--cream); }
+        .client-landing h2 span { color: var(--amber); }
+        .client-landing .tagline { font-size: 18px; color: #bbb; margin-bottom: 40px; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 12px; padding: 16px 40px;
+            border: none; border-radius: 50px; font-size: 18px; font-weight: 600;
+            cursor: pointer; transition: 0.25s ease; font-family: 'Inter', sans-serif;
+            background: var(--charcoal-light); color: var(--cream);
+            border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--shadow);
+        }
+        .btn i { font-size: 20px; }
+        .btn-primary { background: var(--amber); color: var(--charcoal); border-color: var(--amber); }
+        .btn-primary:hover { background: var(--amber-dark); transform: translateY(-3px); box-shadow: 0 8px 28px var(--amber-glow); }
+        .btn-secondary { background: var(--charcoal-lighter); }
+        .btn-secondary:hover { background: var(--charcoal-light); transform: translateY(-3px); }
+        .btn-back { background: transparent; color: #aaa; padding: 10px 20px; font-size: 14px; border: 1px solid rgba(255,255,255,0.06); }
+        .btn-back:hover { color: var(--cream); background: var(--charcoal-light); }
+
+        .client-subview { padding: 20px 0 40px; display: none; }
+        .client-subview.active { display: block; }
+        .sub-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+        .sub-header h3 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--cream); }
+        .sub-header h3 i { color: var(--amber); margin-right: 10px; }
+
+        .menu-grid, .promo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+        .menu-card {
+            background: var(--charcoal-light); border-radius: var(--radius);
+            padding: 20px 24px; border: 1px solid rgba(255,255,255,0.04);
+            transition: 0.25s ease;
+        }
+        .menu-card:hover { transform: translateY(-4px); border-color: var(--amber); }
+        .menu-card .name { font-size: 20px; font-weight: 600; color: var(--cream); }
+        .menu-card .desc { font-size: 14px; color: #aaa; margin: 4px 0 12px; }
+        .menu-card .price { font-size: 22px; font-weight: 700; color: var(--amber); }
+
+        .promo-card {
+            background: var(--charcoal-light); border-radius: var(--radius);
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.04);
+            transition: 0.25s ease;
+        }
+        .promo-card:hover { transform: translateY(-4px); border-color: var(--amber); }
+        .promo-card .promo-img { width: 100%; height: 200px; object-fit: cover; background: var(--charcoal-lighter); display: block; }
+        .promo-card .promo-body { padding: 16px 20px 20px; }
+        .promo-card .promo-body .title { font-size: 18px; font-weight: 600; color: var(--cream); }
+        .promo-card .promo-body .desc { font-size: 14px; color: #aaa; }
+        .promo-card .promo-body .date { font-size: 12px; color: #777; margin-top: 8px; }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: #777; }
+        .empty-state i { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+
+        footer { margin-top: 40px; text-align: center; color: #555; font-size: 13px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.04); }
+
+        @media (max-width: 700px) {
+            .header { flex-direction: column; text-align: center; }
+            .header-brand { justify-content: center; }
+            .client-landing h2 { font-size: 32px; }
+            .btn-group { flex-direction: column; align-items: center; }
+            .btn { width: 100%; justify-content: center; }
+            .menu-grid, .promo-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header class="header">
+        <div class="header-brand">
+            <i class="fas fa-fire logo-icon"></i>
+            <h1>En<span>carbonadas</span></h1>
+        </div>
+        <div class="admin-badge"><i class="fas fa-lock"></i> <a href="admin.html">Administrar</a></div>
+    </header>
+
+    <!-- LANDING -->
+    <div id="clientLanding" class="client-landing">
+        <div class="hero-icon"><i class="fas fa-utensils"></i></div>
+        <h2>Bienvenido a <span>Encarbonadas</span></h2>
+        <p class="tagline">Sabores auténticos, carbón y pasión &mdash; escanea el QR para explorar</p>
+        <div class="btn-group">
+            <button class="btn btn-primary" id="btnVerMenu"><i class="fas fa-book-open"></i> Ver Menú</button>
+            <button class="btn btn-secondary" id="btnVerPromos"><i class="fas fa-tags"></i> Ver Promos</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div id="clientMenu" class="client-subview">
+        <div class="sub-header">
+            <h3><i class="fas fa-book-open"></i> Nuestro Menú</h3>
+            <button class="btn btn-back" id="btnBackFromMenu"><i class="fas fa-arrow-left"></i> Volver</button>
+        </div>
+        <div id="clientMenuGrid" class="menu-grid"></div>
+    </div>
+
+    <!-- PROMOS -->
+    <div id="clientPromos" class="client-subview">
+        <div class="sub-header">
+            <h3><i class="fas fa-tags"></i> Promociones</h3>
+            <button class="btn btn-back" id="btnBackFromPromos"><i class="fas fa-arrow-left"></i> Volver</button>
+        </div>
+        <div id="clientPromoGrid" class="promo-grid"></div>
+    </div>
+
+    <footer>&copy; 2026 Encarbonadas &middot; Hecho con <i class="fas fa-heart" style="color:#e74c3c;"></i></footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    // 🔑 Credenciales de Supabase
+    const SUPABASE_URL = 'https://qasunyqwjatdwsgxjrhf.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_k3b6ZO-zWT4L-PDbotkqhw_gMhUV7Gn';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ─── FUNCIONES DE CARGA ───
+    async function cargarMenu() {
+        const { data, error } = await supabase.from('menu').select('*').order('created_at', { ascending: true });
+        if (error) { console.error('Error cargando menú:', error); return []; }
+        return data;
+    }
+
+    async function cargarPromos() {
+        const { data, error } = await supabase.from('promos').select('*').order('created_at', { ascending: false });
+        if (error) { console.error('Error cargando promos:', error); return []; }
+        return data;
+    }
+
+    function escHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+
+    // ─── RENDER ───
+    async function renderClientMenu() {
+        const grid = document.getElementById('clientMenuGrid');
+        const items = await cargarMenu();
+        if (!items || items.length === 0) {
+            grid.innerHTML = `<div class="empty-state"><i class="fas fa-utensils"></i><p>Menú vacío.</p></div>`;
+            return;
+        }
+        grid.innerHTML = items.map(i => `
+            <div class="menu-card">
+                <div class="name">${escHtml(i.nombre)}</div>
+                <div class="desc">${escHtml(i.descripcion || '')}</div>
+                <div class="price">$${Number(i.precio).toFixed(2)}</div>
+            </div>
+        `).join('');
+    }
+
+    async function renderClientPromos() {
+        const grid = document.getElementById('clientPromoGrid');
+        const items = await cargarPromos();
+        if (!items || items.length === 0) {
+            grid.innerHTML = `<div class="empty-state"><i class="fas fa-tags"></i><p>Sin promociones.</p></div>`;
+            return;
+        }
+        grid.innerHTML = items.map(p => `
+            <div class="promo-card">
+                ${p.imagen_url ? `<img class="promo-img" src="${p.imagen_url}" alt="${escHtml(p.titulo)}" />` :
+                `<div class="promo-img" style="display:flex;align-items:center;justify-content:center;color:#666;font-size:40px;background:var(--charcoal-lighter);"><i class="fas fa-image"></i></div>`}
+                <div class="promo-body">
+                    <div class="title">${escHtml(p.titulo)}</div>
+                    <div class="desc">${escHtml(p.descripcion || '')}</div>
+                    ${p.fecha ? `<div class="date"><i class="far fa-calendar-alt"></i> ${escHtml(p.fecha)}</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ─── NAVEGACIÓN ───
+    const landing = document.getElementById('clientLanding');
+    const menuView = document.getElementById('clientMenu');
+    const promosView = document.getElementById('clientPromos');
+
+    function show(sub) {
+        landing.style.display = 'none';
+        menuView.classList.remove('active');
+        promosView.classList.remove('active');
+        if (sub === 'menu') { menuView.classList.add('active'); renderClientMenu(); }
+        else if (sub === 'promos') { promosView.classList.add('active'); renderClientPromos(); }
+        else { landing.style.display = 'flex'; }
+    }
+
+    document.getElementById('btnVerMenu').addEventListener('click', () => show('menu'));
+    document.getElementById('btnVerPromos').addEventListener('click', () => show('promos'));
+    document.getElementById('btnBackFromMenu').addEventListener('click', () => show('landing'));
+    document.getElementById('btnBackFromPromos').addEventListener('click', () => show('landing'));
+
+    // Inicio
+    show('landing');
+</script>
+</body>
+</html>
