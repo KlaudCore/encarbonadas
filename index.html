@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        /* (Aquí van todos los estilos, igual que antes) */
+        /* ===== ESTILOS (los mismos que antes) ===== */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --charcoal: #1a1a1a; --charcoal-light: #2d2d2d; --charcoal-lighter: #3d3d3d;
-            --amber: #e67e22; --amber-dark: #d35400; --amber-glow: rgba(230, 126, 34, 0.25);
-            --cream: #fdf5e6; --white: #ffffff; --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --amber: #e67e22; --amber-dark: #d35400; --amber-glow: rgba(230,126,34,0.25);
+            --cream: #fdf5e6; --white: #fff; --shadow: 0 8px 32px rgba(0,0,0,0.3);
             --radius: 16px; --radius-sm: 8px;
         }
         body { font-family: 'Inter', sans-serif; background: var(--charcoal); color: var(--cream); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
@@ -101,7 +101,7 @@
         </div>
     </header>
 
-    <!-- LOGIN -->
+    <!-- Login -->
     <div id="loginContainer" class="login-container">
         <h2><i class="fas fa-user-cog" style="color:var(--amber);"></i> Acceso Admin</h2>
         <form id="loginForm">
@@ -118,7 +118,7 @@
         </form>
     </div>
 
-    <!-- PANEL ADMIN (oculto hasta login) -->
+    <!-- Panel Admin -->
     <div id="adminPanelContainer" class="admin-panel-container">
         <div class="note-box">
             <i class="fas fa-info-circle"></i> 
@@ -130,7 +130,7 @@
             <button data-tab="promos"><i class="fas fa-tags"></i> Promos</button>
         </div>
 
-        <!-- PANEL MENÚ -->
+        <!-- Menú -->
         <div class="admin-panel active" id="adminPanelMenu">
             <div class="admin-form">
                 <h4><i class="fas fa-plus-circle"></i> <span id="menuFormTitle">Agregar item</span></h4>
@@ -160,7 +160,7 @@
             <div id="adminMenuList" class="admin-list"></div>
         </div>
 
-        <!-- PANEL PROMOS -->
+        <!-- Promos -->
         <div class="admin-panel" id="adminPanelPromos">
             <div class="admin-form">
                 <h4><i class="fas fa-plus-circle"></i> <span id="promoFormTitle">Agregar promo</span></h4>
@@ -202,29 +202,43 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     (function() {
-        // ─── CONFIGURACIÓN ───
+        // =============================================
+        // CONFIGURACIÓN (cambia solo si es necesario)
+        // =============================================
         const SUPABASE_URL = 'https://qasunyqwjatdwsgxjrhf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_k3b6ZO-zWT4L-PDbotkqhw_gMhUV7Gn';
+
+        // Cliente de Supabase (variable única)
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ─── ELEMENTOS DOM ───
+        // =============================================
+        // ELEMENTOS DOM
+        // =============================================
         const loginContainer = document.getElementById('loginContainer');
         const adminPanelContainer = document.getElementById('adminPanelContainer');
         const loginForm = document.getElementById('loginForm');
         const loginError = document.getElementById('loginError');
         const logoutBtn = document.getElementById('logoutBtn');
 
-        // ─── TOAST ───
+        // =============================================
+        // TOAST
+        // =============================================
         function toast(msg, type = 'info') {
             const c = document.getElementById('toastContainer');
             const el = document.createElement('div');
             el.className = `toast ${type}`;
             el.textContent = msg;
             c.appendChild(el);
-            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(40px)'; setTimeout(() => el.remove(), 300); }, 2800);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(40px)';
+                setTimeout(() => el.remove(), 300);
+            }, 2800);
         }
 
-        // ─── AUTENTICACIÓN ───
+        // =============================================
+        // AUTENTICACIÓN
+        // =============================================
         async function login(email, password) {
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
@@ -283,7 +297,9 @@
         }
         checkSession();
 
-        // ─── CRUD MENÚ ───
+        // =============================================
+        // CRUD MENÚ
+        // =============================================
         const menuForm = document.getElementById('menuForm');
         const menuName = document.getElementById('menuName');
         const menuPrice = document.getElementById('menuPrice');
@@ -378,7 +394,9 @@
             renderAdminMenu();
         }
 
-        // ─── CRUD PROMOS ───
+        // =============================================
+        // CRUD PROMOS
+        // =============================================
         const promoForm = document.getElementById('promoForm');
         const promoTitulo = document.getElementById('promoTitle');
         const promoDesc = document.getElementById('promoDesc');
@@ -525,7 +543,9 @@
             renderAdminPromos();
         }
 
-        // ─── TABS ───
+        // =============================================
+        // TABS
+        // =============================================
         const adminTabs = document.querySelectorAll('#adminTabs button');
         const adminPanelMenu = document.getElementById('adminPanelMenu');
         const adminPanelPromos = document.getElementById('adminPanelPromos');
@@ -542,10 +562,12 @@
             });
         });
 
-        // ─── HELPERS ───
+        // =============================================
+        // HELPERS
+        // =============================================
         function escHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
 
-        // Inicio
+        // Inicializar formularios
         resetMenuForm();
         resetPromoForm();
     })();
